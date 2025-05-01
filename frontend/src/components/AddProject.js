@@ -28,15 +28,15 @@ const AddProject = ({ token, onProjectAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Handle image upload first
     let imageUrl = '';
     if (formData.image) {
       const formDataImage = new FormData();
       formDataImage.append('image', formData.image);
-
+  
       try {
-        const imageRes = await axios.post('/api/projects/upload-image', formDataImage, {
+        const imageRes = await axios.post('http://localhost:5000/api/projects/upload-image', formDataImage, {
           headers: { Authorization: `Bearer ${token}` },
         });
         imageUrl = imageRes.data.imageUrl;
@@ -44,23 +44,24 @@ const AddProject = ({ token, onProjectAdded }) => {
         console.error('Error uploading image:', err);
       }
     }
-
+  
     const payload = {
       ...formData,
       techStack: formData.techStack.split(',').map(t => t.trim()),
       image: imageUrl,  // Add image URL to payload
     };
-
+  
     try {
-      const res = await axios.post('/api/projects', payload, {
+      const res = await axios.post('http://localhost:5000/api/projects', payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      onProjectAdded(res.data);  // Optional: lift state up if needed
+      onProjectAdded(res.data);  // Update the project list with the new project
       setFormData({ title: '', description: '', techStack: '', liveLink: '', repoLink: '', image: null });
     } catch (err) {
       console.error(err);
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 border rounded">

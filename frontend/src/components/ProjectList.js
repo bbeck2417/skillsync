@@ -7,8 +7,10 @@ const ProjectList = ({ token }) => {
 
   useEffect(() => {
     const fetchProjects = async () => {
+      if (!token) return; // Ensure token is not null
+
       try {
-        const res = await axios.get('/api/projects', {
+        const res = await axios.get('http://localhost:5000/api/projects', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProjects(res.data);
@@ -22,13 +24,17 @@ const ProjectList = ({ token }) => {
 
   const handleDelete = async (projectId) => {
     try {
-      await axios.delete(`/api/projects/${projectId}`, {
+      await axios.delete(`http://localhost:5000/api/projects/${projectId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setProjects(projects.filter(project => project._id !== projectId));
+      setProjects(projects.filter((project) => project._id !== projectId));
     } catch (err) {
-      console.error(err);
+      console.error('Error deleting project:', err);
     }
+  };
+
+  const handleAddProject = (newProject) => {
+    setProjects([newProject, ...projects]);  // Add the new project to the list
   };
 
   return (
