@@ -28,7 +28,6 @@ const AddProject = ({ token, onProjectAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
 
     // Handle image upload first
     let imageUrl = '';
